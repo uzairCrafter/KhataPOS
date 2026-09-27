@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>G-Store Pro - Login</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body class="login-page">
+  <div class="login-card">
+    <div class="brand-icon" style="margin:0 auto 16px">🏪</div>
+    <h1>G-Store Pro</h1>
+    <p>Enter your credentials to continue</p>
+    <form method="POST" action="/login">
+      <label>Username</label>
+      <input type="text" name="username" placeholder="admin" required>
+      <label>PIN Code</label>
+      <input type="password" name="pin" placeholder="••••" maxlength="6" required>
+      <% if (error) { %><p class="error"><%= error %></p><% } %>
+      <button type="submit">Login</button>
+      <small>Default: admin / 1234</small>
+    </form>
+  </div>
+</body>
+</html>
