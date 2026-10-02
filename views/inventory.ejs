@@ -1,0 +1,90 @@
+<%- include('header') %>
+
+<div class="page-header">
+  <h2>Inventory</h2>
+  <button onclick="document.getElementById('addModal').style.display='flex'">+ Add Product</button>
+</div>
+
+<form method="GET" action="/inventory" class="filter-bar">
+  <input type="text" name="search" placeholder="Search products..." value="<%= search %>">
+  <select name="category" onchange="this.form.submit()">
+    <option value="">All Categories</option>
+    <% categories.forEach(c => { %>
+    <option value="<%= c %>" <%= category === c ? 'selected' : '' %>><%= c %></option>
+    <% }) %>
+  </select>
+  <button type="submit">Search</button>
+</form>
+
+<table>
+  <tr><th>Name</th><th>Category</th><th>Buy</th><th>Sell</th><th>Margin</th><th>Stock</th><th>Actions</th></tr>
+  <% products.forEach(p => { %>
+  <tr class="<%= p.stock <= p.min_stock ? 'low-stock' : '' %>">
+    <td><%= p.name %></td>
+    <td><%= p.category %></td>
+    <td>Rs. <%= p.buy_price %></td>
+    <td>Rs. <%= p.sell_price %></td>
+    <td>Rs. <%= p.sell_price - p.buy_price %></td>
+    <td><%= p.stock %></td>
+    <td>
+      <button onclick="editProduct(<%= JSON.stringify(p) %>)">Edit</button>
+      <form method="POST" action="/inventory/delete/<%= p.id %>" style="display:inline">
+        <button type="submit" class="btn-danger" onclick="return confirm('Delete this product?')">Delete</button>
+      </form>
+    </td>
+  </tr>
+  <% }) %>
+</table>
+
+<!-- Add Modal -->
+<div id="addModal" class="modal">
+  <div class="modal-content">
+    <h3>Add Product</h3>
+    <form method="POST" action="/inventory/add">
+      <label>Name</label><input name="name" required>
+      <label>Buy Price</label><input name="buy_price" type="number" required>
+      <label>Sell Price</label><input name="sell_price" type="number" required>
+      <label>Stock</label><input name="stock" type="number" required>
+      <label>Min Stock</label><input name="min_stock" type="number" value="5">
+      <label>Category</label><input name="category" value="General">
+      <div class="modal-actions">
+        <button type="button" onclick="document.getElementById('addModal').style.display='none'">Cancel</button>
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Edit Modal -->
+<div id="editModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Product</h3>
+    <form method="POST" id="editForm">
+      <label>Name</label><input name="name" id="e_name" required>
+      <label>Buy Price</label><input name="buy_price" id="e_buy" type="number" required>
+      <label>Sell Price</label><input name="sell_price" id="e_sell" type="number" required>
+      <label>Stock</label><input name="stock" id="e_stock" type="number" required>
+      <label>Min Stock</label><input name="min_stock" id="e_min" type="number">
+      <label>Category</label><input name="category" id="e_cat">
+      <div class="modal-actions">
+        <button type="button" onclick="document.getElementById('editModal').style.display='none'">Cancel</button>
+        <button type="submit">Update</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function editProduct(p) {
+  document.getElementById('editForm').action = '/inventory/edit/' + p.id;
+  document.getElementById('e_name').value = p.name;
+  document.getElementById('e_buy').value = p.buy_price;
+  document.getElementById('e_sell').value = p.sell_price;
+  document.getElementById('e_stock').value = p.stock;
+  document.getElementById('e_min').value = p.min_stock;
+  document.getElementById('e_cat').value = p.category;
+  document.getElementById('editModal').style.display = 'flex';
+}
+</script>
+
+<%- include('footer') %>
