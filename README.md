@@ -18,7 +18,7 @@ KhataPOS is a web application designed for small-to-medium retail businesses to 
 
 ---
 
-## 📂 Repository Structure (Module 1 Scope)
+## 📂 Repository Structure (Module 1 and 2 Scope)
 ```text
 .
 ├── routes/
