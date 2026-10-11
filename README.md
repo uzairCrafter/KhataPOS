@@ -18,27 +18,17 @@ KhataPOS is a web application designed for small-to-medium retail businesses to 
 
 ---
 
-## 📂 Repository Structure (Module 1 and 2 Scope)
-```text
-.
-├── routes/
-│   └── auth.js             # Authentication routes
-├── views/
-│   └── login.ejs           # Login page view
-├── db.js                   # SQLite database configuration
-├── package.json            # Dependencies and scripts
-├── server.js               # Application entry point
-└── README.md               # Documentation
-
-## 📂 Repository Structure (Updated for Module 2)
+## 📂 Repository Structure (Updated for Module 3)
 ```text
 .
 ├── routes/
 │   ├── auth.js             # Authentication routes
-│   └── inventory.js        # Inventory & Product management routes
+│   ├── inventory.js        # Inventory & Product management routes
+│   └── pos.js              # POS & Billing counter routes
 ├── views/
 │   ├── login.ejs           # Login page view
-│   └── inventory.ejs       # Inventory & Stock management view
+│   ├── inventory.ejs       # Inventory & Stock management view
+│   └── pos.ejs             # POS billing interface view
 ├── db.js                   # SQLite database configuration & schemas
 ├── package.json            # Dependencies and scripts
 ├── server.js               # Application entry point
