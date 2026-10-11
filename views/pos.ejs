@@ -1,0 +1,124 @@
+<%- include('header') %>
+
+<h2>POS / Billing</h2>
+<div class="pos-layout">
+  <div class="pos-products">
+    <input type="text" id="searchInput" placeholder="Search products..." oninput="filterProducts()">
+    <div class="product-grid" id="productGrid">
+      <% products.forEach(p => { %>
+      <div class="product-card" data-name="<%= p.name.toLowerCase() %>" onclick='addToCart(<%= JSON.stringify(p) %>)'>
+        <strong><%= p.name %></strong>
+        <span>Rs. <%= p.sell_price %></span>
+        <small>Stock: <%= p.stock %></small>
+      </div>
+      <% }) %>
+    </div>
+  </div>
+
+  <div class="pos-cart">
+    <h3>Cart</h3>
+    <div id="cartItems"></div>
+    <div class="cart-footer">
+      <label>Discount (Rs.)</label>
+      <input type="number" id="discount" value="0" oninput="updateTotals()">
+      <label>Payment</label>
+      <select id="paymentType">
+        <option value="cash">Cash</option>
+        <option value="card">Card</option>
+        <option value="credit">Credit (Udhar)</option>
+      </select>
+      <div id="customerSelect" style="display:none">
+        <label>Customer</label>
+        <select id="customerId">
+          <% customers.forEach(c => { %>
+          <option value="<%= c.id %>"><%= c.name %></option>
+          <% }) %>
+        </select>
+      </div>
+      <div class="totals">
+        <p>Subtotal: Rs. <span id="subtotal">0</span></p>
+        <p><strong>Total: Rs. <span id="total">0</span></strong></p>
+      </div>
+      <button onclick="checkout()" class="btn-checkout">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<script>
+let cart = [];
+
+document.getElementById('paymentType').addEventListener('change', function() {
+  document.getElementById('customerSelect').style.display = this.value === 'credit' ? 'block' : 'none';
+});
+
+function filterProducts() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.product-card').forEach(el => {
+    el.style.display = el.dataset.name.includes(q) ? '' : 'none';
+  });
+}
+
+function addToCart(product) {
+  const existing = cart.find(i => i.product_id === product.id);
+  if (existing) {
+    if (existing.qty < product.stock) existing.qty++;
+  } else {
+    cart.push({ product_id: product.id, name: product.name, price: product.sell_price, qty: 1, max: product.stock });
+  }
+  renderCart();
+}
+
+function renderCart() {
+  const el = document.getElementById('cartItems');
+  el.innerHTML = cart.map((item, i) => `
+    <div class="cart-item">
+      <span>${item.name}</span>
+      <div class="qty-controls">
+        <button onclick="changeQty(${i},-1)">-</button>
+        <span>${item.qty}</span>
+        <button onclick="changeQty(${i},1)">+</button>
+      </div>
+      <span>Rs. ${item.price * item.qty}</span>
+      <button onclick="cart.splice(${i},1);renderCart()" class="btn-danger">✕</button>
+    </div>
+  `).join('');
+  updateTotals();
+}
+
+function changeQty(i, delta) {
+  cart[i].qty = Math.max(1, Math.min(cart[i].max, cart[i].qty + delta));
+  renderCart();
+}
+
+function updateTotals() {
+  const subtotal = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const discount = parseFloat(document.getElementById('discount').value) || 0;
+  document.getElementById('subtotal').textContent = subtotal;
+  document.getElementById('total').textContent = subtotal - discount;
+}
+
+function checkout() {
+  if (!cart.length) return alert('Cart is empty!');
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = '/pos/checkout';
+  
+  const fields = {
+    items: JSON.stringify(cart.map(i => ({ product_id: i.product_id, qty: i.qty }))),
+    discount: document.getElementById('discount').value,
+    payment_type: document.getElementById('paymentType').value,
+    customer_id: document.getElementById('customerId').value,
+  };
+  
+  Object.entries(fields).forEach(([k, v]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden'; input.name = k; input.value = v;
+    form.appendChild(input);
+  });
+  
+  document.body.appendChild(form);
+  form.submit();
+}
+</script>
+
+<%- include('footer') %>
