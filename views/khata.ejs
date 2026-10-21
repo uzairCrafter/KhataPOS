@@ -1,0 +1,79 @@
+<%- include('header') %>
+
+<h2>Khata Book</h2>
+<div class="khata-layout">
+  <div class="khata-list">
+    <button onclick="document.getElementById('addCustomerModal').style.display='flex'">+ Add Customer</button>
+    <% customers.forEach(c => { %>
+    <a href="/khata?customer=<%= c.id %>" class="customer-card <%= selected && selected.id === c.id ? 'active' : '' %>">
+      <strong><%= c.name %></strong>
+      <span class="<%= c.balance > 0 ? 'red' : 'green' %>">Rs. <%= c.balance %></span>
+    </a>
+    <% }) %>
+  </div>
+
+  <div class="khata-detail">
+    <% if (selected) { %>
+    <h3><%= selected.name %> — Balance: Rs. <%= selected.balance %></h3>
+    <div class="khata-actions">
+      <button onclick="openEntry('credit')">+ Add Credit</button>
+      <button onclick="openEntry('payment')" class="btn-green">+ Record Payment</button>
+    </div>
+    <table>
+      <tr><th>Date</th><th>Type</th><th>Amount</th><th>Note</th></tr>
+      <% entries.forEach(e => { %>
+      <tr>
+        <td><%= new Date(e.timestamp).toLocaleDateString() %></td>
+        <td class="<%= e.type === 'credit' ? 'red' : 'green' %>"><%= e.type.toUpperCase() %></td>
+        <td>Rs. <%= e.amount %></td>
+        <td><%= e.note || '-' %></td>
+      </tr>
+      <% }) %>
+    </table>
+    <% } else { %>
+    <p>Select a customer to view their ledger.</p>
+    <% } %>
+  </div>
+</div>
+
+<!-- Add Customer Modal -->
+<div id="addCustomerModal" class="modal">
+  <div class="modal-content">
+    <h3>Add Customer</h3>
+    <form method="POST" action="/khata/add-customer">
+      <label>Name</label><input name="name" required>
+      <label>Phone</label><input name="phone">
+      <div class="modal-actions">
+        <button type="button" onclick="document.getElementById('addCustomerModal').style.display='none'">Cancel</button>
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Add Entry Modal -->
+<div id="entryModal" class="modal">
+  <div class="modal-content">
+    <h3 id="entryTitle">Add Entry</h3>
+    <form method="POST" action="/khata/add-entry">
+      <input type="hidden" name="customer_id" value="<%= selected ? selected.id : '' %>">
+      <input type="hidden" name="type" id="entryType">
+      <label>Amount</label><input name="amount" type="number" required>
+      <label>Note</label><input name="note">
+      <div class="modal-actions">
+        <button type="button" onclick="document.getElementById('entryModal').style.display='none'">Cancel</button>
+        <button type="submit">Save</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function openEntry(type) {
+  document.getElementById('entryType').value = type;
+  document.getElementById('entryTitle').textContent = type === 'credit' ? 'Add Credit' : 'Record Payment';
+  document.getElementById('entryModal').style.display = 'flex';
+}
+</script>
+
+<%- include('footer') %>

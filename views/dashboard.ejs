@@ -1,0 +1,29 @@
+<%- include('header') %>
+
+<h2>Dashboard</h2>
+<div class="stats-grid">
+  <div class="stat-card">
+    <h3>Today's Sales</h3>
+    <p class="stat-value">Rs. <%= stats.totalSales.toLocaleString() %></p>
+  </div>
+  <div class="stat-card">
+    <h3>Profit</h3>
+    <p class="stat-value green">Rs. <%= stats.totalProfit.toLocaleString() %></p>
+  </div>
+  <div class="stat-card">
+    <h3>Invoices</h3>
+    <p class="stat-value"><%= stats.count %></p>
+  </div>
+</div>
+
+<% if (lowStock.length) { %>
+<h3 style="margin-top:24px;color:#e74c3c">⚠️ Low Stock Alerts</h3>
+<table>
+  <tr><th>Product</th><th>Stock</th><th>Min Stock</th></tr>
+  <% lowStock.forEach(p => { %>
+  <tr><td><%= p.name %></td><td class="red"><%= p.stock %></td><td><%= p.min_stock %></td></tr>
+  <% }) %>
+</table>
+<% } %>
+
+<%- include('footer') %>

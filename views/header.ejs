@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Barakat | POS</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-icon">🏪</div>
+        <div><strong>Barakat Shopping Point</strong><br><small>Point of Sale</small></div>
+      </div>
+      <nav>
+        <a href="/" class="<%= page === 'dashboard' ? 'active' : '' %>">📊 Dashboard</a>
+        <a href="/pos" class="<%= page === 'pos' ? 'active' : '' %>">🛒 POS / Billing</a>
+        <a href="/inventory" class="<%= page === 'inventory' ? 'active' : '' %>">📦 Inventory</a>
+        <a href="/khata" class="<%= page === 'khata' ? 'active' : '' %>">👥 Khata Book</a>
+        <a href="/reports" class="<%= page === 'reports' ? 'active' : '' %>">📄 Reports</a>
+      </nav>
+      <div class="user-section">
+        <div class="user-info">
+          <div class="avatar"><%= user.username.charAt(0).toUpperCase() %></div>
+          <div><strong><%= user.username %></strong><br><small><%= user.role %></small></div>
+        </div>
+        <a href="/logout" class="logout-btn">🚪 Logout</a>
+      </div>
+    </aside>
+    <main class="content">

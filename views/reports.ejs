@@ -1,0 +1,32 @@
+<%- include('header') %>
+
+<h2>Reports</h2>
+<div class="filter-bar">
+  <a href="/reports?range=today" class="<%= range === 'today' ? 'active' : '' %>">Today</a>
+  <a href="/reports?range=7days" class="<%= range === '7days' ? 'active' : '' %>">7 Days</a>
+  <a href="/reports?range=30days" class="<%= range === '30days' ? 'active' : '' %>">30 Days</a>
+  <a href="/reports?range=all" class="<%= range === 'all' ? 'active' : '' %>">All Time</a>
+</div>
+
+<div class="stats-grid">
+  <div class="stat-card"><h3>Revenue</h3><p class="stat-value">Rs. <%= stats.revenue.toLocaleString() %></p></div>
+  <div class="stat-card"><h3>Profit</h3><p class="stat-value green">Rs. <%= stats.profit.toLocaleString() %></p></div>
+  <div class="stat-card"><h3>Orders</h3><p class="stat-value"><%= stats.orders %></p></div>
+  <div class="stat-card"><h3>Avg Order</h3><p class="stat-value">Rs. <%= Math.round(stats.avgOrder) %></p></div>
+</div>
+
+<h3 style="margin-top:24px">Recent Sales</h3>
+<table>
+  <tr><th>Invoice</th><th>Total</th><th>Profit</th><th>Payment</th><th>Date</th></tr>
+  <% sales.forEach(s => { %>
+  <tr>
+    <td><%= s.invoice_id %></td>
+    <td>Rs. <%= s.total %></td>
+    <td class="green">Rs. <%= s.profit %></td>
+    <td><%= s.payment_type %></td>
+    <td><%= new Date(s.timestamp).toLocaleString() %></td>
+  </tr>
+  <% }) %>
+</table>
+
+<%- include('footer') %>
