@@ -1,7 +1,6 @@
 # KhataPOS - Web-Based Point of Sale & Digital Ledger System
 
-**Intern Name:** Uzair Shah  
-**Internship ID:** ZYNVEX-CERT-1448  
+**Intern Name:** Uzair Shah   
 **Domain:** Full-Stack Web Development  
 
 ---
@@ -43,7 +42,6 @@
 │   ├── pos.ejs
 │   └── reports.ejs
 ├── db.js                   # SQLite database connection setup
-├── full stack code.docx    # Project source code documentation
 ├── gstore.db               # SQLite main database file
 ├── gstore.db-shm           # SQLite shared memory file
 ├── gstore.db-wal           # SQLite write-ahead log
